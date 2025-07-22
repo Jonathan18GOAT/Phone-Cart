@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<header style="background-color: #333; color: white; padding: 25px 20px; display: flex; align-items: center;">
+  
+  <img src="Screenshot 2025-07-21 174413.png" alt="Logo" style="height: 80px; margin-right: 25px;" id="logo">
+
+  <!-- Title -->
+  <h1 style="margin: 0; font-size: 100px;">
+    <span style="color: #2196F3;">Your</span> <span style="color: #FFEB3B;">Kart</span>
+  </h1>
+</header>
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Product Checkout (₹)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+      border-collapse: collapse;
+      padding: 10px;
+    }
+    #checkout {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Product Selection</h2>
+
+  <label for="product">Choose a product:</label>
+  <select id="product" onchange="addProduct()">
+    <option value="">-- Select a product --</option>
+    <option value="Abbel iPhone">Abbel iPhone</option>
+    <option value="Samdanced Galaxy S24">Samdanced Galaxy S24</option>
+    <option value="EyePhone 15">EyePhone 15</option>
+    <option value="Samdanced Reverse 8a">Samdanced Reverse 8a</option>
+    <option value="Google Vector 9a">Google Vector 9a</option>
+    <option value="GasStation5 (GS5)">GasStation5 (GS5)</option>
+    <option value="0 IQOO Z9 S">0 IQOO Z9 S</option>
+    <option value="1 Minus 2T">1 Minus 2T</option>
+    <option value="Aai Phone">Aai Phone</option>
+    <option value="OnePlus Nerd HighT (GS5)">OnePlus Nerd HighT (GS5)</option>
+    <option value="Samsung Galaxji M35">Samsung Galaxji M35</option>
+    <option value="NokiAI">NokiAI</option>
+    <option value="Yaafle MyPhone">Yaafle MyPhone</option>
+    <option value="Pasta Bologanesh Book">Pasta Bologanesh Book</option>
+    <option value="Lenovo Dab">Lenovo Dab</option>
+    <option value="Apple Look">Apple Look</option>
+  </select>
+
+  <table id="productTable" style="margin-top: 20px;">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Total</th>
+        <th id="totalPrice">₹0.00</th>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div id="checkout">
+    <button onclick="checkout()">Checkout</button>
+    <p id="checkoutMessage" style="color: green; font-weight: bold;"></p>
+  </div>
+
+  <script>
+    const productPrices = {
+      "Abbel iPhone": 73655,
+      "Samdanced Galaxy S24": 103300,
+      "EyePhone 15": 63400,
+      "Samdanced Reverse 8a": 95499,
+      "Google Vector 9a": 82071,
+      "GasStation5 (GS5)": 46000,
+      "0 IQOO Z9 S": 47000,
+      "1 Minus 2T": 32200,
+      "Aai Phone": 67049,
+      "OnePlus Nerd HighT (GS5)": 29906,
+      "Samsung Galaxji M35": 21100,
+      "NokiAI": 5000,
+      "Yaafle MyPhone": 83700,
+      "Pasta Bologanesh Book": 107000,
+      "Lenovo Dab": 27900,
+      "Apple Look": 24899
+    };
+
+    let total = 0;
+
+    function formatRupee(amount) {
+      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
+    }
+
+    function addProduct() {
+      const select = document.getElementById("product");
+      const product = select.value;
+
+      if (product) {
+        const price = productPrices[product];
+        const tableBody = document.querySelector("#productTable tbody");
+
+        const row = document.createElement("tr");
+        const nameCell = document.createElement("td");
+        const priceCell = document.createElement("td");
+
+        nameCell.textContent = product;
+        priceCell.textContent = formatRupee(price);
+
+        row.appendChild(nameCell);
+        row.appendChild(priceCell);
+        tableBody.appendChild(row);
+
+        total += price;
+        document.getElementById("totalPrice").textContent = formatRupee(total);
+
+        // Reset dropdown
+        select.selectedIndex = 0;
+      }
+    }
+
+    function checkout() {
+      if (total > 0) {
+        document.getElementById("checkoutMessage").textContent = 
+          "✅ Thank you! Your total is " + formatRupee(total);
+      } else {
+        document.getElementById("checkoutMessage").textContent = 
+          "⚠️ Please select a product before checking out.";
+      }
+    }
+  </script>
+
+</body>
+</html>
