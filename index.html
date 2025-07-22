@@ -125,14 +125,17 @@
     }
 
     function checkout() {
-      if (total > 0) {
-        document.getElementById("checkoutMessage").textContent = 
-          "✅ Thank you! Your total is " + formatRupee(total);
-      } else {
-        document.getElementById("checkoutMessage").textContent = 
-          "⚠️ Please select a product before checking out.";
-      }
-    }
+  const message = document.getElementById("checkoutMessage");
+  
+  if (total > 0) {
+    message.innerHTML = 
+      "✅ Thank you! Your total is " + formatRupee(total) + 
+      `. Make payment <a href="https://sites.google.com/view/klipfartkart/home" target="_blank" style="color: blue; text-decoration: underline;">here</a>.`;
+  } else {
+    message.textContent = 
+      "⚠️ Please select a product before checking out.";
+  }
+}
   </script>
 
 </body>
