@@ -1,142 +1,206 @@
 <!DOCTYPE html>
-<header style="background-color: #333; color: white; padding: 25px 20px; display: flex; align-items: center;">
-  <h1 style="margin: 0; font-size: 100px;">
-    <span style="color: #2196F3;">Your</span> <span style="color: #FFEB3B;">Kart</span>
-  </h1>
-</header>
-
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Product Checkout (₹)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Kart</title>
+
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      margin: 0;
+      background-color: #fff;
     }
-    table, th, td {
-      border: 1px solid #ccc;
+
+    header {
+      background-color: #2e2e2e;
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 120px;
+      font-weight: bold;
+    }
+
+    .blue { color: #007BFF; }
+    .yellow { color: #FFD700; }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
       border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #aaa;
       padding: 10px;
     }
-    #checkout {
+
+    tfoot td {
+      font-weight: bold;
+    }
+
+    .btn {
       margin-top: 20px;
+      padding: 10px 20px;
+      border: 2px solid black;
+      background: white;
+      cursor: pointer;
+    }
+
+    .thankyou {
+      margin-top: 20px;
+      font-size: 18px;
     }
   </style>
 </head>
+
 <body>
+
+<header>
+  <span class="blue">Your</span> <span class="yellow">Kart</span>
+</header>
+
+<div class="container">
 
   <h2>Product Selection</h2>
 
-  <label for="product">Choose a product:</label>
-  <select id="product" onchange="addProduct()">
+  <label for="productSelect">Choose a product:</label>
+  <select id="productSelect">
     <option value="">-- Select a product --</option>
-    <option value="Abbel iPhone">Abbel iPhone</option>
-    <option value="Samdanced Galaxy S24">Samdanced Galaxy S24</option>
-    <option value="EyePhone 15">EyePhone 15</option>
-    <option value="Samdanced Reverse 8a">Samdanced Reverse 8a</option>
-    <option value="Google Vector 9a">Google Vector 9a</option>
-    <option value="GasStation5 (GS5)">GasStation5 (GS5)</option>
-    <option value="0 IQOO Z9 S">0 IQOO Z9 S</option>
-    <option value="1 Minus 2T">1 Minus 2T</option>
-    <option value="Aai Phone">Aai Phone</option>
-    <option value="OnePlus Nerd HighT">OnePlus Nerd HighT</option>
-    <option value="Samsung Galaxji M35">Samsung Galaxji M35</option>
-    <option value="NokiAI">NokiAI</option>
-    <option value="Yaafle MyPhone">Yaafle MyPhone</option>
-    <option value="Pasta Bologanesh Book">Pasta Bologanesh Book</option>
-    <option value="Lenovo Dab">Lenovo Dab</option>
-    <option value="Apple Look">Apple Look</option>
   </select>
 
-  <table id="productTable" style="margin-top: 20px;">
+  <table id="cartTable" style="display:none;">
     <thead>
       <tr>
         <th>Product</th>
-        <th>Price (₹)</th>
+        <th>Original Price (₹)</th>
+        <th>Winter Wonderland Deals (15% off)</th>
       </tr>
     </thead>
-    <tbody>
-    </tbody>
+
+    <tbody></tbody>
+
     <tfoot>
       <tr>
-        <th>Total</th>
-        <th id="totalPrice">₹0.00</th>
+        <td colspan="2">Total After 15% Discount</td>
+        <td id="finalAmount">₹0.00</td>
       </tr>
     </tfoot>
   </table>
 
-  <div id="checkout">
-    <button onclick="checkout()">Checkout</button>
-    <p id="checkoutMessage" style="color: green; font-weight: bold;"></p>
-  </div>
+  <button class="btn" onclick="checkout()">Checkout</button>
+  <div class="thankyou" id="thankyouMessage"></div>
 
-  <script>
-    const productPrices = {
-      "Abbel iPhone": 73655,
-      "Samdanced Galaxy S24": 103300,
-      "EyePhone 15": 63400,
-      "Samdanced Reverse 8a": 95499,
-      "Google Vector 9a": 82071,
-      "GasStation5 (GS5)": 46000,
-      "0 IQOO Z9 S": 47000,
-      "1 Minus 2T": 32200,
-      "Aai Phone": 67049,
-      "OnePlus Nerd HighT": 29906,
-      "Samsung Galaxji M35": 21100,
-      "NokiAI": 5000,
-      "Yaafle MyPhone": 83700,
-      "Pasta Bologanesh Book": 107000,
-      "Lenovo Dab": 27900,
-      "Apple Look": 24899
-    };
+</div>
 
-    let total = 0;
+<script>
+  const DISCOUNT_RATE = 0.15;
 
-    function formatRupee(amount) {
-      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(amount);
-    }
+  const products = [
+    { name: "Ever Reddy", price: 180 },
+    { name: "Surf Excel", price: 295 },
+    { name: "Thatha Salt", price: 40 },
+    { name: "Tata Sampann Toor Doll", price: 145 },
+    { name: "Eggs", price: 130 },
+    { name: "Antique Bread", price: 60 },
+    { name: "Bossmati Rice", price: 120 },
+    { name: "Rizz Crackers", price: 245 },
+    { name: "Air fried Potato Chips", price: 70 },
+    { name: "Gurmure Chips", price: 40 },
+    { name: "IDiot Batter", price: 95 },
+    { name: "Maggi", price: 30 },
+    { name: "Nescafe Classic Coffee", price: 385 },
+    { name: "Brroke Bond Gold Label", price: 575 },
+    { name: "Kanchenjunga Spices", price: 105 },
+    { name: "ParleAjji biscuit", price: 75 },
+    { name: "Diet Coca Goli Soda", price: 45 },
+    { name: "DOUBLE Scoop Ice Cream", price: 80 },
+    { name: "Blox fruits Stationery set", price: 400 },
+    { name: "First Aid kit", price: 799 },
+    { name: "Yapsara Pen Pencil Set", price: 299 },
+    { name: "Kaptaan Kurku Cereal", price: 330 },
+    { name: "Thumps Up", price: 50 },
+    { name: "Mountain Two", price: 50 },
+    { name: "Fuski Milk", price: 43 },
+    { name: "Diary Mulk", price: 50 },
+    { name: "Diary Milk Silk Set (3 flavours)", price: 240 },
+    { name: "Ohio Cookie", price: 30 },
+    { name: "Papatui Beauty Set", price: 670 },
+    { name: "Wigs Vaperu", price: 199 },
+    { name: "Roadside Snack Set", price: 370 }
+  ];
 
-    function addProduct() {
-      const select = document.getElementById("product");
-      const product = select.value;
+  const select = document.getElementById("productSelect");
+  const tbody = document.querySelector("#cartTable tbody");
+  const cartTable = document.getElementById("cartTable");
+  const finalAmountEl = document.getElementById("finalAmount");
+  const thankyouMessage = document.getElementById("thankyouMessage");
 
-      if (product) {
-        const price = productPrices[product];
-        const tableBody = document.querySelector("#productTable tbody");
+  let cart = [];
 
-        const row = document.createElement("tr");
-        const nameCell = document.createElement("td");
-        const priceCell = document.createElement("td");
+  products.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p.name;
+    opt.textContent = `${p.name} – ₹${p.price}`;
+    select.appendChild(opt);
+  });
 
-        nameCell.textContent = product;
-        priceCell.textContent = formatRupee(price);
+  select.addEventListener("change", () => {
+    const product = products.find(p => p.name === select.value);
+    if (!product) return;
+    cart.push(product);
+    updateCartTable();
+    select.value = "";
+  });
 
-        row.appendChild(nameCell);
-        row.appendChild(priceCell);
-        tableBody.appendChild(row);
+  function updateCartTable() {
+    cartTable.style.display = "table";
+    tbody.innerHTML = "";
 
-        total += price;
-        document.getElementById("totalPrice").textContent = formatRupee(total);
+    let discountedTotal = 0;
 
-        // Reset dropdown
-        select.selectedIndex = 0;
-      }
-    }
+    cart.forEach(p => {
+      const discount = p.price * DISCOUNT_RATE;
+      const finalPrice = p.price - discount;
+      discountedTotal += finalPrice;
 
-    function checkout() {
-  const message = document.getElementById("checkoutMessage");
-  
-  if (total > 0) {
-    message.innerHTML = 
-      "✅ Thank you! Your total is " + formatRupee(total) + 
-      `. Make payment <a href="https://sites.google.com/view/klipfartkart/home" target="_blank" style="color: blue; text-decoration: underline;">here</a>.`;
-  } else {
-    message.textContent = 
-      "⚠️ Please select a product before checking out.";
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${p.name}</td>
+        <td>₹${p.price.toFixed(2)}</td>
+        <td>₹${finalPrice.toFixed(2)}</td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    finalAmountEl.textContent = `₹${discountedTotal.toFixed(2)}`;
   }
-}
-  </script>
+
+  function checkout() {
+    if (cart.length === 0) {
+      alert("Add at least one product!");
+      return;
+    }
+
+    const total = cart.reduce(
+      (sum, p) => sum + (p.price * (1 - DISCOUNT_RATE)),
+      0
+    );
+
+    thankyouMessage.innerHTML = `
+      ✅ Thank you!  
+      Your discounted total is <strong>₹${total.toFixed(2)}</strong>.  
+      Make payment <a href="https://sites.google.com/view/klipfartkart/home" target="_blank">here</a>.
+    `;
+  }
+</script>
 
 </body>
 </html>
+
+
