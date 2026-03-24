@@ -135,8 +135,145 @@
     { name: "Ohio Cookie", price: 30 },
     { name: "Papatui Beauty Set", price: 670 },
     { name: "Wigs Vaperu", price: 199 },
-{ name: "Roadside Snack Set", price: 370 },
-{ name: "Prongles", price: 99 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Kart</title>
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+      background-color: #fff;
+      margin: 0;
+    }
+
+    header {
+      background-color: #2e2e2e;
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 120px;
+      font-weight: bold;
+    }
+
+    .blue { color: #007BFF; }
+    .yellow { color: #FFD700; }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #aaa;
+      padding: 10px;
+    }
+
+    tfoot td {
+      font-weight: bold;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: 2px solid black;
+      background: white;
+      cursor: pointer;
+    }
+
+    .thankyou {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <span class="blue">Your</span> <span class="yellow">Kart</span>
+</header>
+
+<div class="container">
+
+  <h2>Product Selection</h2>
+
+  <label for="productSelect">Choose a product:</label>
+  <select id="productSelect">
+    <option value="">-- Select a product --</option>
+  </select>
+
+  <table id="cartTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price (₹)</th>
+      </tr>
+    </thead>
+
+    <tbody></tbody>
+
+    <tfoot>
+      <tr>
+        <td>Biriyani Bonanza Discount (15% off)</td>
+        <td id="discountAmount">-₹0.00</td>
+      </tr>
+      <tr>
+        <td>Total Amount Payable</td>
+        <td id="finalAmount">₹0.00</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <button class="btn" onclick="checkout()">Checkout</button>
+  <div class="thankyou" id="thankyouMessage"></div>
+
+</div>
+
+<script>
+  const DISCOUNT_RATE = 0.15;
+
+  const products = [
+    { name: "Ever Reddy", price: 180 },
+    { name: "Surf Excel", price: 295 },
+    { name: "Thatha Salt", price: 40 },
+    { name: "Tata Sampann Toor Doll", price: 145 },
+    { name: "Eggs", price: 130 },
+    { name: "Antique Bread", price: 60 },
+    { name: "Bossmati Rice", price: 120 },
+    { name: "Rizz Crackers", price: 245 },
+    { name: "Air fried Potato Chips", price: 70 },
+    { name: "Gurmure Chips", price: 40 },
+    { name: "IDiot Batter", price: 95 },
+    { name: "Maggi", price: 30 },
+    { name: "Nescafe Classic Coffee", price: 385 },
+    { name: "Brroke Bond Gold Label", price: 575 },
+    { name: "Kanchenjunga Spices", price: 105 },
+    { name: "ParleAjji biscuit", price: 75 },
+    { name: "Diet Coca Goli Soda", price: 45 },
+    { name: "DOUBLE Scoop Ice Cream", price: 80 },
+    { name: "Blox fruits Stationery set", price: 400 },
+    { name: "First Aid kit", price: 799 },
+    { name: "Yapsara Pen Pencil Set", price: 299 },
+    { name: "Kaptaan Kurku Cereal", price: 330 },
+    { name: "Thumbs Down", price: 50 },
+    { name: "Mountain View", price: 50 },
+    { name: "Fuski Milk", price: 43 },
+    { name: "Diary Mulk", price: 50 },
+    { name: "Diary Milk Silk Set (3 flavours)", price: 240 },
+    { name: "Ohio Cookie", price: 30 },
+    { name: "Papatui Beauty Set", price: 670 },
+    { name: "Wigs Vaperu", price: 199 },
+    { name: "Roadside Snack Set", price: 370 },
+    { name: "Prongles", price: 99 }
   ];
 
   const select = document.getElementById("productSelect");
@@ -207,3 +344,69 @@
 
 
 
+  ];
+
+  const select = document.getElementById("productSelect");
+  const tbody = document.querySelector("#cartTable tbody");
+  const cartTable = document.getElementById("cartTable");
+  const finalAmountEl = document.getElementById("finalAmount");
+  const discountEl = document.getElementById("discountAmount");
+  const thankyouMessage = document.getElementById("thankyouMessage");
+
+  let cart = [];
+
+  products.forEach(p => {
+    const opt = document.createElement("option");
+    opt.value = p.name;
+    opt.textContent = `${p.name} – ₹${p.price}`;
+    select.appendChild(opt);
+  });
+
+  select.addEventListener("change", () => {
+    const product = products.find(p => p.name === select.value);
+    if (!product) return;
+    cart.push(product);
+    updateCartTable();
+    select.value = "";
+  });
+
+  function updateCartTable() {
+    cartTable.style.display = "table";
+    tbody.innerHTML = "";
+
+    let subtotal = 0;
+
+    cart.forEach(p => {
+      subtotal += p.price;
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${p.name}</td><td>₹${p.price.toFixed(2)}</td>`;
+      tbody.appendChild(row);
+    });
+
+    const discount = subtotal * DISCOUNT_RATE;
+    const finalTotal = subtotal - discount;
+
+    discountEl.textContent = `-₹${discount.toFixed(2)}`;
+    finalAmountEl.textContent = `₹${finalTotal.toFixed(2)}`;
+  }
+
+  function checkout() {
+    if (cart.length === 0) {
+      alert("Add at least one product!");
+      return;
+    }
+
+    const subtotal = cart.reduce((sum, p) => sum + p.price, 0);
+    const discount = subtotal * DISCOUNT_RATE;
+    const total = subtotal - discount;
+
+    thankyouMessage.innerHTML = `
+      ✅ Thank you! Your total after the Biriyani Bonanza Discount is
+      <strong>₹${total.toFixed(2)}</strong>.  
+      Make payment <a href="https://sites.google.com/view/klipfartkart/home" target="_blank">here</a>.
+    `;
+  }
+</script>
+
+</body>
+</html>
